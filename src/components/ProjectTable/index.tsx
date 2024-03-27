@@ -86,7 +86,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
                   <PopoverContent className="flex w-fit items-center gap-3 rounded-md  bg-black/30 p-2">
                     <Button variant="default" asChild>
                       <Link
-                        to={`/projects/${project.id}`}
+                        to={`/projects/${project.id}/edit`}
                         className="flex items-center gap-2 text-blue-500"
                       >
                         <Edit className="size-5" />
