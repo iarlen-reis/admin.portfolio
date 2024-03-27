@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
-import { Filter } from 'lucide-react'
+import { Camera, Filter } from 'lucide-react'
 
 import {
   Popover,
@@ -31,6 +31,11 @@ export default function MenuTools() {
           </div>
         </PopoverContent>
       </Popover>
+      <Button asChild>
+        <Link to="/upload">
+          <Camera className="size-5" />
+        </Link>
+      </Button>
       <Button asChild>
         <Link to="/projects/new">Novo Projeto</Link>
       </Button>
