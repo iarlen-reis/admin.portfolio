@@ -22,6 +22,7 @@
     "react": "^0.0.0-experimental-670811593-20240322",
     "react-cookie": "^7.1.0",
     "react-dom": "^0.0.0-experimental-670811593-20240322",
+    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.1",
     "react-router-dom": "^6.22.3",
     "sonner": "^1.4.41",
