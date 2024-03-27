@@ -6,6 +6,17 @@ import { useDropzone } from 'react-dropzone'
 import { FileUp } from 'lucide-react'
 import { api } from '@/lib/api'
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
 interface ImageProps {
   id: string
   name: string
@@ -13,14 +24,10 @@ interface ImageProps {
 }
 
 export default function UploadImageScreen() {
-  const { uploadImage } = useCloudinary()
+  const { uploadImage, removeImage } = useCloudinary()
   const [file, setFile] = useState<File>()
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFile(acceptedFiles[0])
-  }, [])
-
-  const { data: images } = useQuery({
+  const { data: images, isFetching } = useQuery({
     queryKey: ['images'],
     queryFn: async () => {
       const response = await api.get<ImageProps[]>('/images')
@@ -43,6 +50,10 @@ export default function UploadImageScreen() {
     setFile(undefined)
   }
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0])
+  }, [])
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
@@ -53,7 +64,7 @@ export default function UploadImageScreen() {
           Faça upload de imagens para o seu projeto
         </p>
       </div>
-      {!file && (
+      {!file && !isFetching && (
         <div
           {...getRootProps()}
           className="shandow flex h-[140px] items-center justify-center rounded-md bg-zinc-300 text-center"
@@ -94,13 +105,45 @@ export default function UploadImageScreen() {
         {images && (
           <div className="grid grid-cols-3 gap-4">
             {images.map((image) => (
-              <div key={image.id} className="text-center">
+              <div key={image.id} className="flex flex-col text-center">
                 <img
                   src={image.url}
                   alt="preview"
                   className="h-[100px] w-full rounded-md object-contain"
                 />
                 <span className="text-lg text-zinc-500">{image.name}</span>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive">Deletar</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Tem certeza que deseja apagar essa imagem?
+                      </DialogTitle>
+                      <DialogDescription>
+                        Essa ação não pode ser desfeita e a imagem será apagada
+                        definitivamente.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="flex justify-end">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Fechar
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => removeImage(image.name)}
+                        >
+                          Deletar
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             ))}
           </div>
