@@ -34,7 +34,7 @@ export default function useProjects(): UseProjectsProps {
 
   const { mutate: createProject } = useMutation({
     mutationFn: async (data: ProjectProps) => {
-      const response = await api.post<ProjectProps>('/projects', data)
+      const response = await api.post<ProjectProps>('/admin/projects', data)
 
       return response.data
     },
@@ -62,7 +62,10 @@ export default function useProjects(): UseProjectsProps {
 
   const { mutate: editProject } = useMutation({
     mutationFn: async (data: ProjectProps) => {
-      const response = await api.put<ProjectProps>(`/projects/${data.id}`, data)
+      const response = await api.put<ProjectProps>(
+        `/admin/projects/${data.id}`,
+        data,
+      )
 
       return response.data
     },
@@ -77,7 +80,10 @@ export default function useProjects(): UseProjectsProps {
           onClick: () => toast.dismiss(),
         },
       })
+
+      navigate(`/projects/${data?.id}`)
     },
+
     onError: () => {
       toast.error('Erro ao editar projeto, tente novamente.', {
         action: {
@@ -90,7 +96,9 @@ export default function useProjects(): UseProjectsProps {
 
   const { mutate: disableProject } = useMutation({
     mutationFn: async (id: string) => {
-      const response = await api.delete<ProjectProps>(`/projects/${id}/disable`)
+      const response = await api.delete<ProjectProps>(
+        `/admin/projects/${id}/disable`,
+      )
 
       return response.data
     },
@@ -118,7 +126,9 @@ export default function useProjects(): UseProjectsProps {
 
   const { mutate: enableProject } = useMutation({
     mutationFn: async (id: string) => {
-      const response = await api.patch<ProjectProps>(`/projects/${id}/enable`)
+      const response = await api.patch<ProjectProps>(
+        `/admin/projects/${id}/enable`,
+      )
 
       return response.data
     },
