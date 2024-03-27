@@ -1,13 +1,12 @@
-import SelectField from '@/components/SelectField'
+import { FormProvider, useForm } from 'react-hook-form'
 import TextAreaField from '@/components/TextAreaField'
+import SelectField from '@/components/SelectField'
+import { useQuery } from '@tanstack/react-query'
 import TextField from '@/components/TextField'
 import { Button } from '@/components/ui/button'
 import useProjects from '@/hooks/useProjects'
-import { api } from '@/lib/api'
-import { useQuery } from '@tanstack/react-query'
-import { use } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
+import { api } from '@/lib/api'
 
 interface ProjectProps {
   id: string
@@ -29,16 +28,20 @@ interface ImageProps {
   url: string
 }
 
-const getImages = api
-  .get<ImageProps[]>('/images')
-  .then((response) => response.data)
-
 export default function ProjectEditScreen() {
   const methods = useForm<ProjectProps>()
   const { editProject } = useProjects()
   const { id } = useParams()
 
-  const images = use(getImages)
+  const { data: images } = useQuery({
+    queryKey: ['images'],
+    queryFn: async () => {
+      const response = await api.get<ImageProps[]>('/images')
+
+      return response.data
+    },
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
 
   const { data: project } = useQuery({
     queryKey: ['projects', id],

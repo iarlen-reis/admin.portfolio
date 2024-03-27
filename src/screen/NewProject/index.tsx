@@ -1,11 +1,11 @@
 import { FormProvider, useForm } from 'react-hook-form'
 import TextAreaField from '@/components/TextAreaField'
 import SelectField from '@/components/SelectField'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import TextField from '@/components/TextField'
 import useProjects from '@/hooks/useProjects'
 import { api } from '@/lib/api'
-import { use } from 'react'
 
 interface ProjectProps {
   name: string
@@ -25,14 +25,19 @@ interface ImageProps {
   url: string
 }
 
-const getImages = api
-  .get<ImageProps[]>('/images')
-  .then((response) => response.data)
-
 export default function NewProjectScreen() {
   const { createProject } = useProjects()
   const methods = useForm<ProjectProps>()
-  const images = use(getImages)
+
+  const { data: images } = useQuery({
+    queryKey: ['images'],
+    queryFn: async () => {
+      const response = await api.get<ImageProps[]>('/images')
+
+      return response.data
+    },
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
 
   const handleCreateProject = (data: ProjectProps) => {
     createProject({
