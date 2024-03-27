@@ -1,9 +1,10 @@
-import { api } from '@/lib/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { api } from '@/lib/api'
 import { toast } from 'sonner'
 
 interface UseCloudinaryProps {
   uploadImage: (file: FormData) => void
+  removeImage: (slug: string) => void
 }
 
 export const useCloudinary = (): UseCloudinaryProps => {
@@ -15,16 +16,16 @@ export const useCloudinary = (): UseCloudinaryProps => {
 
       return response.data
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['images'] })
-
-      toast.success('Imagem salva com sucesso!', {
-        action: {
-          label: 'Fechar',
-          onClick: () => toast.dismiss(),
-        },
-      })
+      setTimeout(() => {
+        toast.success('Imagem salva com sucesso!', {
+          action: {
+            label: 'Fechar',
+            onClick: () => toast.dismiss(),
+          },
+        })
+        queryClient.invalidateQueries({ queryKey: ['images'] })
+      }, 3000)
     },
     onError: () => {
       toast.error('Erro ao salvar imagem, tente novamente.', {
@@ -36,7 +37,34 @@ export const useCloudinary = (): UseCloudinaryProps => {
     },
   })
 
+  const { mutate: removeImage } = useMutation({
+    mutationFn: async (slug: string) => {
+      const response = await api.delete(`/images/delete/${slug}`)
+
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['images'] })
+
+      toast.success('Imagem apagada com sucesso!', {
+        action: {
+          label: 'Fechar',
+          onClick: () => toast.dismiss(),
+        },
+      })
+    },
+    onError: () => {
+      toast.error('Erro ao apagar imagem, tente novamente.', {
+        action: {
+          label: 'Fechar',
+          onClick: () => toast.dismiss(),
+        },
+      })
+    },
+  })
+
   return {
     uploadImage,
+    removeImage,
   }
 }
