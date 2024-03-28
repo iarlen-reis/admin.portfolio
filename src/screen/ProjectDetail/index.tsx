@@ -83,7 +83,7 @@ export default function ProjectDetail() {
               </li>
             ))}
           </ul>
-          <p>{project.description}</p>
+          <pre className="text-wrap">{project.description}</pre>
           <div className="flex items-center justify-end gap-3">
             <Button>
               <Link to={`/projects/${id}/edit`}>Editar</Link>
