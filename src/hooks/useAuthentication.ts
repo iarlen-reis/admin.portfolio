@@ -30,7 +30,7 @@ export const useAuthentication = (): UseAuthenticationProps => {
         },
       })
 
-      setCookie('token', response.data.data.token, {
+      setCookie('token', response.data.token, {
         path: '/',
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7), // 7 days
       })

@@ -21,7 +21,7 @@ api.interceptors.request.use(async (config) => {
 
   const authToken = new Cookies().get('token')
 
-  if (authToken.length > 15) {
+  if (authToken) {
     config.headers.Authorization = `Bearer ${authToken}`
   }
   return config
