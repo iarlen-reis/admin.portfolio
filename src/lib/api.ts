@@ -8,7 +8,7 @@ export const api = axios.create({
 
 const getCsrfToken = async () => {
   try {
-    await axios.get('/sanctum/csrf-cookie')
+    await api.get('/sanctum/csrf-cookie')
   } catch (error) {
     console.error('Erro ao obter o CSRF token:', error)
   }
