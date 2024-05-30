@@ -8,7 +8,7 @@ import useProjects from '@/hooks/useProjects'
 import { api } from '@/lib/api'
 
 interface ProjectProps {
-  name: string
+  title: string
   type: string
   image: string
   deploy: string
@@ -23,6 +23,7 @@ interface ImageProps {
   id: string
   name: string
   url: string
+  public_id: string
 }
 
 export default function NewProjectScreen() {
@@ -32,7 +33,7 @@ export default function NewProjectScreen() {
   const { data: images } = useQuery({
     queryKey: ['images'],
     queryFn: async () => {
-      const response = await api.get<ImageProps[]>('/images')
+      const response = await api.get<ImageProps[]>('/uploads')
 
       return response.data
     },
@@ -58,7 +59,7 @@ export default function NewProjectScreen() {
       >
         <FormProvider {...methods}>
           <div className="grid grid-cols-2 gap-4">
-            <TextField name="name" label="Nome do projeto" type="text" />
+            <TextField name="title" label="Nome do projeto" type="text" />
             <TextField name="type" label="Tipo de projeto" type="text" />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -66,8 +67,8 @@ export default function NewProjectScreen() {
             <TextField name="github" label="Link para github" type="text" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <TextField name="started" label="Iniciado em" type="text" />
-            <TextField name="finished" label="Finalizado em" type="text" />
+            <TextField name="started" label="Iniciado em" type="date" />
+            <TextField name="finished" label="Finalizado em" type="date" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <SelectField name="image" label="Imagem" options={images} />
