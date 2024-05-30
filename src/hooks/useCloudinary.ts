@@ -12,7 +12,7 @@ export const useCloudinary = (): UseCloudinaryProps => {
 
   const { mutate: uploadImage } = useMutation({
     mutationFn: async (file: FormData) => {
-      const response = await api.post('/upload', file)
+      const response = await api.post('/uploads', file)
 
       return response.data
     },
@@ -39,7 +39,7 @@ export const useCloudinary = (): UseCloudinaryProps => {
 
   const { mutate: removeImage } = useMutation({
     mutationFn: async (slug: string) => {
-      const response = await api.delete(`/images/delete/${slug}`)
+      const response = await api.delete(`/uploads/${slug}`)
 
       return response.data
     },
