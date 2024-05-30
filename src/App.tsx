@@ -15,24 +15,31 @@ import {
 
 interface ProjectProps {
   id: string
-  name: string
+  title: string
   type: string
   image: string
-  active: boolean
+  status: boolean
   deploy: string
   finished: string
 }
 
 interface PaginationProps {
-  total: number
   pages: number
-  hasNext: boolean
-  hasPrevious: boolean
+  next: boolean
+  prev: boolean
+}
+
+interface PaginationMetaProps {
+  current_page: number
+  from: number
+  last_page: number
+  total: number
 }
 
 export interface ProjectPaginationProps {
-  pagination: PaginationProps
-  projects: ProjectProps[]
+  links: PaginationProps
+  meta: PaginationMetaProps
+  data: ProjectProps[]
 }
 
 function App() {
@@ -59,25 +66,25 @@ function App() {
         <p>Gerencie seus projetos</p>
       </div>
       <MenuTools />
-      <ProjectTable projects={projects?.projects || []} />
+      <ProjectTable projects={projects?.data || []} />
       <div className="flex self-end">
         <Pagination className="w-fit">
           <PaginationContent>
-            {projects?.pagination.hasPrevious && (
+            {projects?.links?.prev && (
               <PaginationItem>
                 <PaginationPrevious
                   to={`?filter=${filter}&page=${page - 1}`}
                 ></PaginationPrevious>
               </PaginationItem>
             )}
-            {projects?.pagination.pages && projects?.pagination.pages > 1 && (
+            {projects?.links && projects?.meta.last_page > 1 && (
               <PaginationItem>
                 <PaginationLink to={`?filter=${filter}&page=${page}`}>
                   {page}
                 </PaginationLink>
               </PaginationItem>
             )}
-            {projects?.pagination.hasNext && (
+            {projects?.links?.next && (
               <PaginationItem>
                 <PaginationNext
                   to={`?filter=${filter}&page=${page + 1}`}
