@@ -10,9 +10,9 @@ import clsx from 'clsx'
 
 interface ProjectProps {
   id: string
-  name: string
+  title: string
   type: string
-  active: boolean
+  status: boolean
   image: string
   deploy: string
   github: string
@@ -40,26 +40,26 @@ export default function ProjectDetail() {
       {project && (
         <div className="flex flex-col gap-5">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold">{project.name}</h1>
+            <h1 className="text-2xl font-bold">{project.title}</h1>
             <p className="text-zinc-400">
               {convertType(project.type)} |
               <span
                 className={clsx('ml-2', {
-                  'text-green-500': project.active,
-                  'text-red-500': !project.active,
+                  'text-green-500': project.status,
+                  'text-red-500': !project.status,
                 })}
               >
-                {convertStatus(project.active)}
+                {convertStatus(project.status)}
               </span>
             </p>
             <p className="text-zinc-400">
-              {project?.started} - {project.finished}
+              {project.started} - {project.finished}
             </p>
           </div>
           <div className="w-full">
             <img
               src={project.image}
-              alt={`Imagem do projeto ${project?.name}`}
+              alt={`Imagem do projeto ${project.title}`}
               className="w-full rounded-md shadow"
             />
           </div>
@@ -88,7 +88,7 @@ export default function ProjectDetail() {
             <Button>
               <Link to={`/projects/${id}/edit`}>Editar</Link>
             </Button>
-            {project.active ? (
+            {project.status ? (
               <Button
                 variant="destructive"
                 onClick={() => disableProject(project.id)}
