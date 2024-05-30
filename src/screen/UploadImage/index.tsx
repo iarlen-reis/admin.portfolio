@@ -112,7 +112,9 @@ export default function UploadImageScreen() {
                   alt="preview"
                   className="h-[100px] w-full rounded-md object-contain"
                 />
-                <span className="text-lg text-zinc-500">{image.name}</span>
+                <span className="line-clamp-1 text-lg text-zinc-500">
+                  {image.name}
+                </span>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="destructive">Deletar</Button>
