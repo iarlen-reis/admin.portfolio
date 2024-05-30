@@ -5,9 +5,9 @@ import { toast } from 'sonner'
 
 interface ProjectProps {
   id?: string
-  name: string
+  title: string
   type: string
-  active?: boolean
+  status?: boolean
   image: string
   deploy: string
   github: string
@@ -34,7 +34,12 @@ export default function useProjects(): UseProjectsProps {
 
   const { mutate: createProject } = useMutation({
     mutationFn: async (data: ProjectProps) => {
-      const response = await api.post<ProjectProps>('/admin/projects', data)
+      const response = await api.post<ProjectProps>('/admin/projects', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
 
       return response.data
     },
@@ -65,6 +70,12 @@ export default function useProjects(): UseProjectsProps {
       const response = await api.put<ProjectProps>(
         `/admin/projects/${data.id}`,
         data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
       )
 
       return response.data
@@ -74,7 +85,7 @@ export default function useProjects(): UseProjectsProps {
       queryClient.invalidateQueries({ queryKey: ['projects', data?.id] })
 
       toast.success('Projeto editado com sucesso!', {
-        description: `O projeto ${data?.name} foi editado.`,
+        description: `O projeto ${data?.title} foi editado.`,
         action: {
           label: 'Fechar',
           onClick: () => toast.dismiss(),
@@ -98,6 +109,9 @@ export default function useProjects(): UseProjectsProps {
     mutationFn: async (id: string) => {
       const response = await api.delete<ProjectProps>(
         `/admin/projects/${id}/disable`,
+        {
+          withCredentials: true,
+        },
       )
 
       return response.data
@@ -107,7 +121,7 @@ export default function useProjects(): UseProjectsProps {
       queryClient.invalidateQueries({ queryKey: ['projects', data?.id] })
 
       toast.success('Projeto desativado com sucesso!', {
-        description: `O projeto ${data?.name} foi desativado.`,
+        description: `O projeto ${data?.title} foi desativado.`,
         action: {
           label: 'Fechar',
           onClick: () => toast.dismiss(),
@@ -137,7 +151,7 @@ export default function useProjects(): UseProjectsProps {
       queryClient.invalidateQueries({ queryKey: ['projects', data?.id] })
 
       toast.success('Projeto ativado com sucesso!', {
-        description: `O projeto ${data?.name} foi ativado.`,
+        description: `O projeto ${data?.title} foi ativado.`,
         action: {
           label: 'Fechar',
           onClick: () => toast.dismiss(),
