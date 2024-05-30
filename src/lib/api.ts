@@ -1,11 +1,24 @@
 import axios from 'axios'
+import { Cookies } from 'react-cookie'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 })
 
-api.interceptors.request.use((config) => {
-  const authToken = document.cookie.replace('token=', '')
+const getCsrfToken = async () => {
+  try {
+    await axios.get('/sanctum/csrf-cookie')
+  } catch (error) {
+    console.error('Erro ao obter o CSRF token:', error)
+  }
+}
+
+api.interceptors.request.use(async (config) => {
+  await getCsrfToken()
+
+  const authToken = new Cookies().get('token')
+
   if (authToken.length > 15) {
     config.headers.Authorization = `Bearer ${authToken}`
   }
