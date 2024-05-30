@@ -20,10 +20,10 @@ import clsx from 'clsx'
 
 interface ProjectProps {
   id: string
-  name: string
+  title: string
   type: string
   image: string
-  active: boolean
+  status: boolean
   deploy: string
   finished: string
 }
@@ -57,15 +57,15 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
                 </Link>
               </TableCell>
               <TableCell>
-                <Link to={`/projects/${project.id}`}>{project.name}</Link>
+                <Link to={`/projects/${project.id}`}>{project.title}</Link>
               </TableCell>
               <TableCell
                 className={clsx('font-medium', {
-                  'text-red-500': !project.active,
-                  'text-green-500': project.active,
+                  'text-red-500': !project.status,
+                  'text-green-500': project.status,
                 })}
               >
-                {project.active ? 'Ativo' : 'Inativo'}
+                {project.status ? 'Ativo' : 'Inativo'}
               </TableCell>
               <TableCell>{project.type}</TableCell>
               <TableCell>
@@ -92,7 +92,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
                         <Edit className="size-5" />
                       </Link>
                     </Button>
-                    {project.active ? (
+                    {project.status ? (
                       <Button
                         variant="destructive"
                         onClick={() => disableProject(project.id)}
