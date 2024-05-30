@@ -21,6 +21,7 @@ interface ImageProps {
   id: string
   name: string
   url: string
+  public_id: string
 }
 
 export default function UploadImageScreen() {
@@ -30,7 +31,7 @@ export default function UploadImageScreen() {
   const { data: images, isFetching } = useQuery({
     queryKey: ['images'],
     queryFn: async () => {
-      const response = await api.get<ImageProps[]>('/images')
+      const response = await api.get<ImageProps[]>('/uploads')
       return response.data
     },
     staleTime: 1000 * 60 * 10, // 10 minutes
