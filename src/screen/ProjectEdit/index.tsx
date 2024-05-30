@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button'
 import useProjects from '@/hooks/useProjects'
 import { useParams } from 'react-router-dom'
 import { api } from '@/lib/api'
+import { format } from 'date-fns'
 
 interface ProjectProps {
   id: string
-  name: string
+  title: string
   type: string
-  active: boolean
+  status: boolean
   image: string
   deploy: string
   github: string
@@ -36,7 +37,7 @@ export default function ProjectEditScreen() {
   const { data: images } = useQuery({
     queryKey: ['images'],
     queryFn: async () => {
-      const response = await api.get<ImageProps[]>('/images')
+      const response = await api.get<ImageProps[]>('/uploads')
 
       return response.data
     },
@@ -66,7 +67,7 @@ export default function ProjectEditScreen() {
       {project && (
         <div className="flex w-full flex-col gap-5">
           <div className="mt-3 flex flex-col">
-            <h1 className="text-2xl font-bold">Editar {project.name}</h1>
+            <h1 className="text-2xl font-bold">Editar {project.title}</h1>
             <p className="text-zinc-400">
               Faça a edição do seu projeto de forma simples.
             </p>
@@ -78,10 +79,10 @@ export default function ProjectEditScreen() {
             <FormProvider {...methods}>
               <div className="grid grid-cols-2 gap-4">
                 <TextField
-                  name="name"
+                  name="title"
                   label="Nome do projeto"
                   type="text"
-                  defaultValue={project.name}
+                  defaultValue={project.title}
                 />
                 <TextField
                   name="type"
@@ -108,14 +109,17 @@ export default function ProjectEditScreen() {
                 <TextField
                   name="started"
                   label="Inicado em"
-                  type="text"
-                  defaultValue={project.started}
+                  type="date"
+                  defaultValue={format(new Date(project.started), 'yyyy-MM-dd')}
                 />
                 <TextField
                   name="finished"
                   label="Finalizado em"
-                  type="text"
-                  defaultValue={project.finished}
+                  type="date"
+                  defaultValue={format(
+                    new Date(project.finished),
+                    'yyyy-MM-dd',
+                  )}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
