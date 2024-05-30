@@ -23,11 +23,16 @@ export const useAuthentication = (): UseAuthenticationProps => {
 
   const handleLogin = async (data: LoginProps) => {
     try {
-      const response = await api.post('/users/auth', data)
+      const response = await api.post('/auth/login', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
 
-      setCookie('token', response.data.Token, {
+      setCookie('token', response.data.data.token, {
         path: '/',
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 7), // 7 days
       })
 
       toast.success('Login efetuado com sucesso!', {
